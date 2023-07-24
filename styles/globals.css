@@ -1,0 +1,96 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    max-width: 100wh;
+    height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.table {
+  background: rgb(3, 79, 102);
+  color: rgb(248, 245, 245)
+}
+.btn-editp {
+  background: #857c09;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+.btn-editp:hover{
+  background: rgb(36, 179, 7);
+}
+.btn-hapusp {
+  background: #bb6e16;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+.btn-hapus:hover {
+  background: rgb(226, 230, 11);
+}
+.btn-editc {
+  background: #126b5c;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+
+.btn-editc:hover {
+  background: rgb(36, 179, 7);
+}
+
+.btn-hapusc {
+  background: #bb6e16;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+
+.btn-hapusc:hover {
+  background: rgb(226, 230, 11);
+}
+.btn-editpk {
+  background: #126b5c;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+
+.btn-editpk:hover {
+  background: rgb(36, 179, 7);
+}
+
+.btn-hapuspk {
+  background: #bb6e16;
+  color: #eff8f8;
+  border: none;
+  padding: 7px 13px;
+  margin: 6px 6px;
+  border-radius: .2rem;
+}
+
+.btn-hapuspk:hover {
+  background: rgb(226, 230, 11);
+}
+@import url(./dashboard.css);
