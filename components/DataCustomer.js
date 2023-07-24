@@ -5,7 +5,6 @@ import { mutate } from "swr";
 import Router from "next/router";
 const DataCustomer = () => {
   const { data, error } = useDataCustomer();
-
   if (error) {
     return <div>Error Landing</div>;
   }

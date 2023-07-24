@@ -3,16 +3,15 @@ import { useDataPemesanan } from "../lib/swr.fetch";
 import Link from "next/link";
 import { mutate } from "swr";
 import Router from "next/router";
+
 const DataPemesanan = () => {
   const { data, error } = useDataPemesanan();
-  // console.log(data);
   if (error) {
     return <div>Error Landing</div>;
   }
   if (!data) {
     return <div>Loading</div>;
   }
-  // console.log("kedua", data);
   async function hapuspemesanan(id_pemesanan) {
     let res = await fetch(`/api/hapus-pemesanan?id_pemesanan=${id_pemesanan}`, {
       method: "DELETE",
@@ -31,7 +30,6 @@ const DataPemesanan = () => {
           <thead>
             <tr>
               <th scope="col">Id Pemesanan</th>
-              <th scope="col">Id Customer</th>
               <th scope="col">Jenis Paket</th>
               <th scope="col">Tgl Pemesanan</th>
               <th scope="col">Status Pemesanan</th>
@@ -42,7 +40,6 @@ const DataPemesanan = () => {
             {data.map((pms, idx) => (
               <tr key={idx}>
                 <th scope="row">{pms.id_pemesanan}</th>
-                <td>{pms.id_customer}</td>
                 <td>{pms.jenis_paket}</td>
                 <td>{pms.tgl_pemesanan.substring(0, 10)}</td>
                 <td>{pms.status_pemesanan}</td>
