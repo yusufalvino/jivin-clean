@@ -27,10 +27,11 @@ const DaftarPaket = () => {
   return (
     <>
       <div className="container">
+        <h3 className="text-uppercase py-3">Daftar Paket</h3>
         <table className="table table-bordered table-secondary text-center">
           <thead>
             <tr>
-              <th scope="col">Id Paket</th>
+              <th scope="col">No</th>
               <th scope="col">Jenis Paket</th>
               <th scope="col">Harga Paket</th>
               <th scope="col">Estimasi Paket</th>
@@ -38,9 +39,9 @@ const DaftarPaket = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((pkt) => (
-              <tr key={pkt}>
-                <th scope="row">{pkt.id_paket}</th>
+            {data.map((pkt, idx) => (
+              <tr key={idx}>
+                <th scope="row">{idx + 1}</th>
                 <td>{pkt.jenis_paket_cuci}</td>
                 <td>{pkt.harga_paket_cuci}</td>
                 <td>{pkt.estimasi_paket}</td>

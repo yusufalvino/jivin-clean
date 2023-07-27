@@ -1,13 +1,29 @@
 import Head from "next/head";
 import Router, { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-
+import { useDaftarPaket, useDataCustomer } from "../lib/swr.fetch";
+import axios from "axios";
 const UpdatePemesanan = () => {
-  const [_id_customer, setId_customer] = useState("");
-  const [_jenis_paket, setJenis_paket] = useState("");
+  const [_id_customer, setId_customer] = useState(0);
+  const [_jenis_paket, setJenis_paket] = useState(0);
   const [_tgl_pemesanan, setTgl_pemesanan] = useState("");
   const [_status_pemesanan, setStatus_pemesanan] = useState("");
-  const [_id_pemesanan, setId_pemesanan] = useState("");
+  const [_status_pembayaran, setStatus_pembayaran] = useState(0);
+  const [_id_pemesanan, setId_pemesanan] = useState(0);
+  const [_total_pembayaran, setTotal_pembayaran] = useState(0);
+  const [datacustByID, setDatacustById] = useState([]);
+  const [datapaketByID, setDatapaketById] = useState([]);
+  const [total_harga, setTotal_harga] = useState(0);
+
+  const { data: dataPack, error: errPacket } = useDaftarPaket();
+  const { data: dataCust, error: errCust } = useDataCustomer();
+
+  // if (errCust && errPacket) {
+  //   return <div>Error Landing</div>;
+  // }
+  // if (!dataCust && !dataPack) {
+  //   return <div>Loading</div>;
+  // }
 
   const router = useRouter();
   const {
@@ -15,14 +31,18 @@ const UpdatePemesanan = () => {
     jenis_paket,
     tgl_pemesanan,
     status_pemesanan,
+    status_pembayaran,
+    total_pembayaran,
+    jumlah_drop_sepatu,
     id_pemesanan,
+    harga_paket_cuci,
   } = router.query;
 
   useEffect(() => {
-    if (typeof id_customer == "string") {
+    if (typeof id_customer == "number") {
       setId_customer(id_customer);
     }
-    if (typeof jenis_paket == "string") {
+    if (typeof jenis_paket == "number") {
       setJenis_paket(jenis_paket);
     }
     if (typeof tgl_pemesanan == "string") {
@@ -31,10 +51,44 @@ const UpdatePemesanan = () => {
     if (typeof status_pemesanan == "string") {
       setStatus_pemesanan(status_pemesanan);
     }
-    if (typeof id_pemesanan == "string") {
+    if (typeof id_pemesanan == "number") {
       setId_pemesanan(id_pemesanan);
     }
-  }, [id_customer, jenis_paket, tgl_pemesanan, status_pemesanan, id_pemesanan]);
+    if (typeof status_pembayaran == "number") {
+      setId_pemesanan(status_pembayaran);
+    }
+  }, [
+    id_customer,
+    jenis_paket,
+    tgl_pemesanan,
+    status_pemesanan,
+    id_pemesanan,
+    status_pembayaran,
+  ]);
+
+  const SelectCustomer = async (idcust) => {
+    setId_customer(idcust);
+    var custId = await axios.get(
+      `http://localhost:3000/api/datacustomer/byID?id=${idcust}`
+    );
+
+    setDatacustById(custId.data.data);
+  };
+
+  const SelectPaket = async (idpaket) => {
+    setJenis_paket(idpaket);
+    var paketID = await axios.get(
+      `http://localhost:3000/api/daftarpaket/byID?id=${idpaket}`
+    );
+
+    setDatapaketById(paketID.data.data);
+
+    let totalbayar =
+      datacustByID[0]?.jumlah_drop_sepatu *
+      parseInt(paketID.data.data[0].harga_paket_cuci);
+
+    setTotal_pembayaran(totalbayar);
+  };
 
   async function submitHandler(e) {
     e.preventDefault();
@@ -47,7 +101,7 @@ const UpdatePemesanan = () => {
         body: JSON.stringify({
           id_pemesanan: _id_pemesanan,
           id_customer: _id_customer,
-          jenis_paket: _jenis_paket,
+          id_paket: _jenis_paket,
           tgl_pemesanan: _tgl_pemesanan,
           status_pemesanan: _status_pemesanan,
         }),
@@ -81,48 +135,114 @@ const UpdatePemesanan = () => {
           <>Edit Data Pemesanan</>
         </h3>
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Id Customer</label>
+          <label htmlFor="exampleInputPassword1">PIlih Customer</label>
+          <select
+            className="form-select form-control"
+            name=""
+            id=""
+            value={id_customer}
+            onChange={(e) => SelectCustomer(e.target.value)}
+          >
+            <option>Pilih Customer</option>
+            {dataCust?.map((v, id) => {
+              return (
+                <option key={id} value={v.id_customer}>
+                  {v.nama + " " + v.alamat}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="exampleInputPassword1">Pilih Paket</label>
+          <select
+            className="form-select form-control"
+            name=""
+            id=""
+            value={jenis_paket}
+            onChange={(e) => SelectPaket(e.target.value)}
+          >
+            <option>Pilih Paket</option>
+            {dataPack?.map((v, id) => {
+              return (
+                <option key={id} value={v.id_paket}>
+                  {v.jenis_paket_cuci}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="exampleInputPassword1">Jumlah Drop Sepatu</label>
           <input
             type="text"
-            placeholder="Id Customer"
+            disabled
             className="form-control"
-            id="id_customer"
-            value={_id_customer}
-            onChange={(e) => setId_customer(e.target.value)}
+            id=""
+            value={jumlah_drop_sepatu}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Jenis Paket</label>
+          <label htmlFor="exampleInputPassword1">Harga</label>
           <input
             type="text"
-            placeholder="Jenis Paket"
+            disabled
             className="form-control"
-            id="jenis_paket"
-            value={_jenis_paket}
-            onChange={(e) => setJenis_paket(e.target.value)}
+            id=""
+            value={harga_paket_cuci}
+            // onChange={(e) => setTgl_pemesanan(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="exampleInputPassword1">Total Pembayaran</label>
+          <input
+            type="text"
+            disabled
+            className="form-control"
+            id=""
+            value={total_pembayaran}
+            // onChange={(e) => setTgl_pemesanan(e.target.value)}
           />
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputPassword1">Tanggal Pemesanan</label>
           <input
-            type="text"
+            type="date"
             placeholder="Tanggal Pemesanan"
             className="form-control"
             id="tgl_pemesanan"
-            value={_tgl_pemesanan}
+            value={tgl_pemesanan}
             onChange={(e) => setTgl_pemesanan(e.target.value)}
           />
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputPassword1">Status Pemesanan</label>
-          <input
-            type="text"
-            placeholder="Status Pemesanan"
-            className="form-control"
-            id="status_pemesanan"
+          <select
+            className="form-select form-control"
+            name=""
+            id=""
             value={_status_pemesanan}
             onChange={(e) => setStatus_pemesanan(e.target.value)}
-          />
+          >
+            <option>Pilih status pemesanan</option>
+            <option value="Belum Selesai">Belum Selesai</option>
+            <option value="On Progress">On Progress</option>
+            <option value="Sudah Selesai">Sudah Selesai</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="exampleInputPassword1">Status Pembayaran</label>
+          <select
+            className="form-select form-control"
+            name=""
+            id=""
+            value={status_pembayaran}
+            onChange={(e) => setStatus_pembayaran(e.target.value)}
+          >
+            <option defaultValue={"default"}>Pilih status bayar</option>
+            <option value="1">Sudah Bayar</option>
+            <option value="0">Belum Bayar</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary w-100">
           Update

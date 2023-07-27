@@ -26,10 +26,11 @@ const DataCustomer = () => {
   return (
     <>
       <div className="container">
+        <h3 className="text-uppercase py-3">Data Customer</h3>
         <table className="table table-bordered table-secondary text-center">
           <thead>
             <tr>
-              <th scope="col">Id Customer</th>
+              <th scope="col">No</th>
               <th scope="col">Nama</th>
               <th scope="col">Alamat</th>
               <th scope="col">No HP</th>
@@ -40,7 +41,7 @@ const DataCustomer = () => {
           <tbody>
             {data.map((ctr, idx) => (
               <tr key={idx}>
-                <th scope="row">{ctr.id_customer}</th>
+                <th scope="row">{idx + 1}</th>
                 <td>{ctr.nama}</td>
                 <td>{ctr.alamat}</td>
                 <td>{ctr.no_hp}</td>
